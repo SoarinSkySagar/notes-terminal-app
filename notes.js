@@ -1,13 +1,13 @@
 import fs from 'fs';
 import chalk from 'chalk';
 
-export const getNotes = function () {
-    return 'Your notes...';
+export const getNotes = () => {
+    console.log(chalk.bgYellow.bold('Your notes...'));
 }
 
-export const addNote = function (title, body) {
+export const addNote = (title, body) => {
     const notes = loadNotes();
-    const duplicate = notes.filter(function (note) {
+    const duplicate = notes.filter((note) => {
         return note.title === title;
     });
     
@@ -24,16 +24,16 @@ export const addNote = function (title, body) {
     } 
 }
 
-export const removeNote = function (title) {
+export const removeNote = (title) => {
     const notes = loadNotes();
-    const duplicate = notes.filter(function (note) {
+    const duplicate = notes.filter((note) => {
         return note.title === title;
     });
 
     if (duplicate.length === 0) {
         console.log(chalk.bgRed.bold('No note found!'));
     } else {
-        const newNote = notes.filter(function (note) {
+        const newNote = notes.filter((note) => {
             return note.title != title;
         })
         saveNotes(newNote);
@@ -41,11 +41,20 @@ export const removeNote = function (title) {
     }
 }
 
-const saveNotes = function(notes) {
+export const listNotes = () => {
+    const notes = loadNotes();
+    var counter = 1;
+    notes.forEach((note) => {
+        console.log( chalk.green(counter + '.'), note.title, chalk.green('\n=>'), note.body, '\n');
+        counter++;
+    });
+}
+
+const saveNotes = (notes) => {
     fs.writeFileSync('notes.json',JSON.stringify(notes));
 }
 
-const loadNotes = function () {
+const loadNotes = () => {
     try {
         return JSON.parse(fs.readFileSync('notes.json'));
     } catch (e) {

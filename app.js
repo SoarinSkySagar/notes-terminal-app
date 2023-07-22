@@ -1,4 +1,4 @@
-import { getNotes, addNote, removeNote } from "./notes.js";
+import { getNotes, addNote, removeNote, listNotes } from "./notes.js";
 import chalk from 'chalk';
 import yargs from "yargs";
 import { hideBin } from 'yargs/helpers'
@@ -20,7 +20,7 @@ yarg.command({
             type: 'string',
         }
     },
-    handler: function (argv) {
+    handler(argv) {
         addNote(argv.title, argv.body);
     },
     
@@ -36,7 +36,7 @@ yarg.command({
             type:'string',
         }
     },
-    handler: function (argv) {
+    handler(argv) {
         removeNote(argv.title);
     }
 })
@@ -44,8 +44,9 @@ yarg.command({
 yarg.command({
     command: 'list',
     describe: 'List all the notes in the database',
-    handler: function () {
-        console.log('Displaying the list in the database')
+    handler() {
+        getNotes();
+        listNotes();
     },
     
 })
@@ -53,7 +54,7 @@ yarg.command({
 yarg.command({
     command: 'read',
     describe: 'List all the notes in the database',
-    handler: function () {
+    handler() {
         console.log('Reading the lists in the database')
     }
 })
