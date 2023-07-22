@@ -1,17 +1,17 @@
 import fs from 'fs';
 import chalk from 'chalk';
 
-export const getNotes = () => {
+const getNotes = () => {
     console.log(chalk.bgYellow.bold('Your notes...'));
 }
 
 export const addNote = (title, body) => {
     const notes = loadNotes();
-    const duplicate = notes.filter((note) => {
+    const duplicate = notes.find((note) => {
         return note.title === title;
     });
     
-    if (duplicate.length === 0) {
+    if (!duplicate) {
         notes.push({
             title: title,
             body: body,
@@ -44,10 +44,34 @@ export const removeNote = (title) => {
 export const listNotes = () => {
     const notes = loadNotes();
     var counter = 1;
-    notes.forEach((note) => {
-        console.log( chalk.green(counter + '.'), note.title, chalk.green('\n=>'), note.body, '\n');
-        counter++;
+    if (notes.length === 0) {
+        console.log(chalk.yellow('No notes created yet!'));
+    } else {
+        getNotes();
+        notes.forEach((note) => {
+            console.log( chalk.green(counter + '.'), note.title, chalk.green('\n=>'), note.body, '\n');
+            counter++;
+        });
+    }
+}
+
+export const readNote = (title) => {
+    const notes = loadNotes();
+    const searched = notes.find((note) => {
+        return note.title === title;
     });
+
+    if (!searched) {
+        console.log(chalk.bgRed.bold('No such note exists!'));
+    } else {
+        console.log(chalk.green('\n'+searched.title, '\n'+searched.body, '\n'));
+    }
+}
+
+export const clearAll = () => {
+    const notes = [];
+    fs.writeFileSync('notes.json', JSON.stringify(notes));
+    console.log(chalk.bgGreen.bold('All notes cleared!'));
 }
 
 const saveNotes = (notes) => {
